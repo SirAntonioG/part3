@@ -5,6 +5,20 @@ const app = express();
 app.use(express.json());
 app.use(express.static("build"));
 app.use(cors());
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
+  next();
+};
+// app.use(requestLogger);
+// const unknownEndpoint = (request, response, next) => {
+//   // response.status(404).send({ error: "unknown endpoint" });
+//   next();
+// };
+
+app.use(unknownEndpoint);
 
 let notes = [
   {
