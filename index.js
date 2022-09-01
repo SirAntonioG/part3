@@ -8,27 +8,7 @@ app.use(express.json());
 app.use(express.static("build"));
 app.use(cors());
 
-const mongoose = require("mongoose");
-
-// DO NOT SAVE YOUR PASSWORD TO GITHUB!!
-const url = process.env.MONGODB_URL;
-
-mongoose.connect(url);
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  date: Date,
-  important: Boolean,
-});
-noteSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
-
-const Note = mongoose.model("Note", noteSchema);
+const Note = require("./models/note");
 
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
@@ -83,7 +63,7 @@ app.post("/api/notes", (request, response) => {
   response.json(note);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
